@@ -3,7 +3,6 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 import { admin, multiSession } from "better-auth/plugins";
-import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
@@ -13,7 +12,6 @@ import WelcomeEmail from "@/lib/services/email-templates/WelcomeEmail";
 import { sendAdminSlackNotification } from "@/lib/services/notification";
 import { resend } from "@/lib/services/resend";
 import { db } from "@/server/db";
-import { user as userSchema } from "@/server/db/schema";
 
 export const polarClient = new Polar({
   accessToken: process.env.POLAR_ACCESS_TOKEN,
@@ -21,8 +19,9 @@ export const polarClient = new Polar({
 });
 
 export const auth = betterAuth({
+  baseURL: env.NEXT_PUBLIC_APP_URL,
   database: drizzleAdapter(db, {
-    provider: "pg",
+    provider: "sqlite",
   }),
   user: {
     additionalFields: {

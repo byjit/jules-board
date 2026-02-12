@@ -1,6 +1,7 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Jules Board",
+  "short_name": "Jules",
+  "description": "Modern Kanban Board for Development Projects",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
@@ -15,5 +16,6 @@
   ],
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "display": "standalone"
+  "display": "standalone",
+  "start_url": "/"
 }

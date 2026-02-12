@@ -47,8 +47,7 @@ You are an experienced software engineer with expertise in various programming l
 - `pnpm run dev` - Start development server with Turbo
 - `pnpm run preview` - Build and start the app in preview mode (production build)
 - `pnpm run build` - Build for production
-- `pnpm run check` - Run ultracite diagnostics (errors only)
-- `pnpm run fix` - Fix issues with ultracite
+- `pnpm run check` - Fix and Run ultracite diagnostics (errors only)
 - `pnpm run typecheck` - Run TypeScript type checking
 - `pnpm run db:local` - Start Turso DB in local development mode
 - `pnpm run db:generate` - Generate database schema with drizzle-kit

@@ -2,13 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Project",
-    short_name: "Project",
-    description: "Project description",
+    name: "Jules Board",
+    short_name: "Jules",
+    description: "Modern Kanban Board for Development Projects",
     start_url: "/",
     display: "standalone",
-    background_color: "#0a0a0a",
-    theme_color: "#2178f9",
+    background_color: "#ffffff",
+    theme_color: "#ffffff",
     icons: [
       {
         src: "/android-chrome-192x192.png",

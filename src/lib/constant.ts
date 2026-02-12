@@ -2,8 +2,8 @@ export const SYSTEM_NOTIFICATION_EMAIL = "Jit <jit@byjit.com>";
 export const SYSTEM_ADMIN_EMAIL = "prasanjitdutta45@gmail.com";
 
 export const SYSTEM_ADMIN_USER_IDS = ["de"];
-export const APP_NAME = "Template";
-export const APP_DESCRIPTION = "Template";
+export const APP_NAME = "Jules Board";
+export const APP_DESCRIPTION = "Modern Kanban Board for your Jules agents";
 
 export const GALLERY_ITEMS: GalleryItem[] = [
   {

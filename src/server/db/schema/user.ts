@@ -1,24 +1,24 @@
 import { createId } from "@paralleldrive/cuid2";
-import { boolean, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { createInsertSchema, createSelectSchema, createUpdateSchema } from "drizzle-zod";
 import type { z } from "zod";
 
-export const user = pgTable("user", {
+export const user = sqliteTable("user", {
   id: text("id")
     .primaryKey()
     .$defaultFn(() => createId()),
   name: text("name").notNull(),
   email: text("email").notNull(),
-  emailVerified: boolean("email_verified").notNull(),
+  emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
   image: text("image"),
-  onboard: boolean("onboard").default(true),
+  onboard: integer("onboard", { mode: "boolean" }).default(true),
   metadata: text("metadata"),
   role: text("role").default("user"),
-  banned: boolean("banned").default(false),
+  banned: integer("banned", { mode: "boolean" }).default(false),
   banReason: text("ban_reason"),
-  banExpires: timestamp("ban_expires"),
-  createdAt: timestamp("created_at").notNull(),
-  updatedAt: timestamp("updated_at").notNull(),
+  banExpires: integer("ban_expires", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
 export type User = typeof user.$inferSelect;

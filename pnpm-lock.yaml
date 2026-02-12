@@ -15,20 +15,20 @@ importers:
         specifier: 2.0.23
         version: 2.0.23(zod@4.3.6)
       '@ai-sdk/react':
-        specifier: ^3.0.84
-        version: 3.0.84(react@19.2.4)(zod@4.3.6)
+        specifier: ^3.0.85
+        version: 3.0.85(react@19.2.4)(zod@4.3.6)
       '@auth/drizzle-adapter':
         specifier: ^1.11.1
         version: 1.11.1
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.1(react@19.2.4))
-      '@neondatabase/serverless':
-        specifier: ^1.0.2
-        version: 1.0.2
+      '@libsql/client':
+        specifier: ^0.17.0
+        version: 0.17.0
       '@openrouter/ai-sdk-provider':
         specifier: ^2.2.3
-        version: 2.2.3(ai@6.0.82(zod@4.3.6))(zod@4.3.6)
+        version: 2.2.3(ai@6.0.83(zod@4.3.6))(zod@4.3.6)
       '@paralleldrive/cuid2':
         specifier: ^3.3.0
         version: 3.3.0
@@ -69,8 +69,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(next@16.1.6(@babel/core@7.28.0)(@opentelemetry/api@1.9.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       ai:
-        specifier: ^6.0.82
-        version: 6.0.82(zod@4.3.6)
+        specifier: ^6.0.83
+        version: 6.0.83(zod@4.3.6)
       axios:
         specifier: ^1.13.5
         version: 1.13.5
@@ -240,6 +240,9 @@ importers:
       drizzle-kit:
         specifier: ^0.31.9
         version: 0.31.9
+      sharp:
+        specifier: ^0.34.5
+        version: 0.34.5
       tailwindcss:
         specifier: ^4.1.18
         version: 4.1.18
@@ -258,8 +261,8 @@ importers:
 
 packages:
 
-  '@ai-sdk/gateway@3.0.42':
-    resolution: {integrity: sha512-Il9lZWPUQMX59H5yJvA08gxfL2Py8oHwvAYRnK0Mt91S+JgPcyk/yEmXNDZG9ghJrwSawtK5Yocy8OnzsTOGsw==}
+  '@ai-sdk/gateway@3.0.43':
+    resolution: {integrity: sha512-D+bST+VnL+7BOSBcXLR7stLQ+HyTW51htVfP8HUlzZh8V35ZBNEgXFaUicWXjMWum62IEgt8D+wE1g1u5Hz0xA==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -296,8 +299,8 @@ packages:
     resolution: {integrity: sha512-oGMAgGoQdBXbZqNG0Ze56CHjDZ1IDYOwGYxYjO5KLSlz5HiNQ9udIXsPZ61VWaHGZ5XW/jyjmr6t2xz2jGVwbQ==}
     engines: {node: '>=18'}
 
-  '@ai-sdk/react@3.0.84':
-    resolution: {integrity: sha512-caX8dsXGHDctQsFGgq05sdaw9YD2C8Y9SfnOk0b0LPPi4J7/V54tq22MPTGVO9zS3LmsfFQf0GDM4WFZNC5XZA==}
+  '@ai-sdk/react@3.0.85':
+    resolution: {integrity: sha512-HJ1gt35Yrt7k756zTtIDM1vSBQlReQC28EUGwtV2qe37m6w7+mdNZnPr2Yjz1NKtAvn/7IE8jHg9Up+jXkDZhA==}
     engines: {node: '>=18'}
     peerDependencies:
       react: ^18 || ~19.0.1 || ~19.1.2 || ^19.2.1
@@ -2769,8 +2772,8 @@ packages:
     resolution: {integrity: sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==}
     engines: {node: '>= 14'}
 
-  ai@6.0.82:
-    resolution: {integrity: sha512-WLml1ab2IXtREgkxrq2Pl6lFO6NKgC17MqTzmK5mO1UO6tMAJiVjkednw9p0j4+/LaUIZQoRiIT8wA37LswZ9Q==}
+  ai@6.0.83:
+    resolution: {integrity: sha512-WoNO3SrlbxqLP/eVNvurDho8Uct6cUdmWc42VFQM2E+NecaXcZ6C9cQL56Ip/8ddsEZnnxdyt0WqG9i7NPdRHw==}
     engines: {node: '>=18'}
     peerDependencies:
       zod: ^3.25.76 || ^4.1.8
@@ -5602,7 +5605,7 @@ packages:
 
 snapshots:
 
-  '@ai-sdk/gateway@3.0.42(zod@4.3.6)':
+  '@ai-sdk/gateway@3.0.43(zod@4.3.6)':
     dependencies:
       '@ai-sdk/provider': 3.0.8
       '@ai-sdk/provider-utils': 4.0.14(zod@4.3.6)
@@ -5643,10 +5646,10 @@ snapshots:
     dependencies:
       json-schema: 0.4.0
 
-  '@ai-sdk/react@3.0.84(react@19.2.4)(zod@4.3.6)':
+  '@ai-sdk/react@3.0.85(react@19.2.4)(zod@4.3.6)':
     dependencies:
       '@ai-sdk/provider-utils': 4.0.14(zod@4.3.6)
-      ai: 6.0.82(zod@4.3.6)
+      ai: 6.0.83(zod@4.3.6)
       react: 19.2.4
       swr: 2.3.6(react@19.2.4)
       throttleit: 2.1.0
@@ -6221,8 +6224,7 @@ snapshots:
       '@standard-schema/utils': 0.3.0
       react-hook-form: 7.71.1(react@19.2.4)
 
-  '@img/colour@1.0.0':
-    optional: true
+  '@img/colour@1.0.0': {}
 
   '@img/sharp-darwin-arm64@0.34.5':
     optionalDependencies:
@@ -6393,12 +6395,10 @@ snapshots:
       - bufferutil
       - encoding
       - utf-8-validate
-    optional: true
 
   '@libsql/core@0.17.0':
     dependencies:
       js-base64: 3.7.7
-    optional: true
 
   '@libsql/darwin-arm64@0.5.22':
     optional: true
@@ -6416,7 +6416,6 @@ snapshots:
       - bufferutil
       - encoding
       - utf-8-validate
-    optional: true
 
   '@libsql/isomorphic-ws@0.1.5':
     dependencies:
@@ -6425,7 +6424,6 @@ snapshots:
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
-    optional: true
 
   '@libsql/linux-arm-gnueabihf@0.5.22':
     optional: true
@@ -6479,13 +6477,13 @@ snapshots:
       outvariant: 1.4.3
       strict-event-emitter: 0.5.1
 
-  '@neon-rs/load@0.0.4':
-    optional: true
+  '@neon-rs/load@0.0.4': {}
 
   '@neondatabase/serverless@1.0.2':
     dependencies:
       '@types/node': 22.19.7
       '@types/pg': 8.16.0
+    optional: true
 
   '@next/env@16.1.6': {}
 
@@ -6546,9 +6544,9 @@ snapshots:
 
   '@open-draft/until@2.1.0': {}
 
-  '@openrouter/ai-sdk-provider@2.2.3(ai@6.0.82(zod@4.3.6))(zod@4.3.6)':
+  '@openrouter/ai-sdk-provider@2.2.3(ai@6.0.83(zod@4.3.6))(zod@4.3.6)':
     dependencies:
-      ai: 6.0.82(zod@4.3.6)
+      ai: 6.0.83(zod@4.3.6)
       zod: 4.3.6
 
   '@opentelemetry/api@1.9.0': {}
@@ -7809,6 +7807,7 @@ snapshots:
   '@types/node@22.19.7':
     dependencies:
       undici-types: 6.21.0
+    optional: true
 
   '@types/node@25.2.3':
     dependencies:
@@ -7819,6 +7818,7 @@ snapshots:
       '@types/node': 25.2.3
       pg-protocol: 1.11.0
       pg-types: 2.2.0
+    optional: true
 
   '@types/prismjs@1.26.5': {}
 
@@ -7851,7 +7851,6 @@ snapshots:
   '@types/ws@8.18.1':
     dependencies:
       '@types/node': 25.2.3
-    optional: true
 
   '@ungap/structured-clone@1.3.0': {}
 
@@ -7874,9 +7873,9 @@ snapshots:
 
   agent-base@7.1.4: {}
 
-  ai@6.0.82(zod@4.3.6):
+  ai@6.0.83(zod@4.3.6):
     dependencies:
-      '@ai-sdk/gateway': 3.0.42(zod@4.3.6)
+      '@ai-sdk/gateway': 3.0.43(zod@4.3.6)
       '@ai-sdk/provider': 3.0.8
       '@ai-sdk/provider-utils': 4.0.14(zod@4.3.6)
       '@opentelemetry/api': 1.9.0
@@ -8143,7 +8142,6 @@ snapshots:
       node-fetch: 2.7.0
     transitivePeerDependencies:
       - encoding
-    optional: true
 
   cross-spawn@7.0.6:
     dependencies:
@@ -8246,8 +8244,7 @@ snapshots:
 
   destr@2.0.5: {}
 
-  detect-libc@2.0.2:
-    optional: true
+  detect-libc@2.0.2: {}
 
   detect-libc@2.1.2: {}
 
@@ -9031,8 +9028,7 @@ snapshots:
 
   jose@6.1.3: {}
 
-  js-base64@3.7.7:
-    optional: true
+  js-base64@3.7.7: {}
 
   js-tokens@4.0.0: {}
 
@@ -9082,7 +9078,6 @@ snapshots:
       '@libsql/linux-x64-gnu': 0.5.22
       '@libsql/linux-x64-musl': 0.5.22
       '@libsql/win32-x64-msvc': 0.5.22
-    optional: true
 
   lightningcss-android-arm64@1.30.2:
     optional: true
@@ -9657,7 +9652,6 @@ snapshots:
   node-fetch@2.7.0:
     dependencies:
       whatwg-url: 5.0.0
-    optional: true
 
   node-fetch@3.3.2:
     dependencies:
@@ -9804,9 +9798,11 @@ snapshots:
 
   peberminta@0.9.0: {}
 
-  pg-int8@1.0.1: {}
+  pg-int8@1.0.1:
+    optional: true
 
-  pg-protocol@1.11.0: {}
+  pg-protocol@1.11.0:
+    optional: true
 
   pg-types@2.2.0:
     dependencies:
@@ -9815,6 +9811,7 @@ snapshots:
       postgres-bytea: 1.0.1
       postgres-date: 1.0.7
       postgres-interval: 1.2.0
+    optional: true
 
   picocolors@1.1.1: {}
 
@@ -9854,15 +9851,19 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  postgres-array@2.0.0: {}
+  postgres-array@2.0.0:
+    optional: true
 
-  postgres-bytea@1.0.1: {}
+  postgres-bytea@1.0.1:
+    optional: true
 
-  postgres-date@1.0.7: {}
+  postgres-date@1.0.7:
+    optional: true
 
   postgres-interval@1.2.0:
     dependencies:
       xtend: 4.0.2
+    optional: true
 
   powershell-utils@0.1.0: {}
 
@@ -9880,8 +9881,7 @@ snapshots:
 
   prismjs@1.30.0: {}
 
-  promise-limit@2.7.0:
-    optional: true
+  promise-limit@2.7.0: {}
 
   prompts@2.4.2:
     dependencies:
@@ -10425,7 +10425,6 @@ snapshots:
       '@img/sharp-win32-arm64': 0.34.5
       '@img/sharp-win32-ia32': 0.34.5
       '@img/sharp-win32-x64': 0.34.5
-    optional: true
 
   shebang-command@2.0.0:
     dependencies:
@@ -10672,8 +10671,7 @@ snapshots:
     dependencies:
       tldts: 7.0.19
 
-  tr46@0.0.3:
-    optional: true
+  tr46@0.0.3: {}
 
   trim-lines@3.0.1: {}
 
@@ -10742,7 +10740,8 @@ snapshots:
       - typescript
       - valibot
 
-  undici-types@6.21.0: {}
+  undici-types@6.21.0:
+    optional: true
 
   undici-types@7.16.0: {}
 
@@ -10886,14 +10885,12 @@ snapshots:
 
   web-streams-polyfill@3.3.3: {}
 
-  webidl-conversions@3.0.1:
-    optional: true
+  webidl-conversions@3.0.1: {}
 
   whatwg-url@5.0.0:
     dependencies:
       tr46: 0.0.3
       webidl-conversions: 3.0.1
-    optional: true
 
   when-exit@2.1.5: {}
 
@@ -10927,15 +10924,15 @@ snapshots:
 
   ws@8.17.1: {}
 
-  ws@8.18.3:
-    optional: true
+  ws@8.18.3: {}
 
   wsl-utils@0.3.0:
     dependencies:
       is-wsl: 3.1.0
       powershell-utils: 0.1.0
 
-  xtend@4.0.2: {}
+  xtend@4.0.2:
+    optional: true
 
   y18n@5.0.8: {}
 

@@ -1,5 +1,5 @@
-import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
+import { createClient } from "@libsql/client";
+import { drizzle } from "drizzle-orm/libsql";
 
 import { env } from "@/env";
 import * as schema from "./schema";
@@ -9,10 +9,15 @@ import * as schema from "./schema";
  * update.
  */
 const globalForDb = globalThis as unknown as {
-  client: ReturnType<typeof neon> | undefined;
+  client: ReturnType<typeof createClient> | undefined;
 };
 
-export const client = globalForDb.client ?? neon(env.DATABASE_URL);
+export const client =
+  globalForDb.client ??
+  createClient({
+    url: env.DATABASE_URL,
+    authToken: env.TURSO_AUTH_TOKEN,
+  });
 if (env.NODE_ENV !== "production") globalForDb.client = client;
 
 export const db = drizzle(client, { schema });

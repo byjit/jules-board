@@ -1,5 +1,4 @@
 import { getSession } from "auth";
-import Image from "next/image";
 import { redirect } from "next/navigation";
 import { Logo } from "@/components/block/Logo";
 import { LoginButton } from "@/components/login-form";
@@ -13,7 +12,7 @@ export default async function LoginPage() {
   }
 
   return (
-    <div className="w-full min-h-screen grid lg:grid-cols-2">
+    <div className="w-full min-h-screen">
       {/* Left Side - Login Form */}
       <div className="flex flex-col justify-center items-center p-8 md:p-12 lg:p-16 bg-background">
         <div className="w-full max-w-sm space-y-8">
@@ -24,7 +23,7 @@ export default async function LoginPage() {
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tight">Sign in</h1>
             <p className="text-muted-foreground">
-              Welcome. You are just a step away from unlocking a new experience.
+              Welcome. Let&apos;s create your account first. Sign in by clicking here.
             </p>
           </div>
 
@@ -37,17 +36,6 @@ export default async function LoginPage() {
             />
           </div>
         </div>
-      </div>
-
-      {/* Right Side - Image & Testimonial */}
-      <div className="hidden lg:block relative bg-muted">
-        <Image
-          alt="Login visual"
-          className="object-cover"
-          fill
-          priority
-          src="https://images.unsplash.com/photo-1762115331515-9740ca3dcd21"
-        />
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+"use client";
 import { LayoutDashboard, Menu, RefreshCcw, Settings, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
