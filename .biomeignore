@@ -1,0 +1,7 @@
+src/styles/globals.css
+docs/*.md
+/tests/temp/
+node_modules/
+dist/
+.env
+.vscode/
