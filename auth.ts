@@ -40,13 +40,6 @@ export const auth = betterAuth({
         fieldName: "onboard",
         unique: false,
       },
-      appName: {
-        type: "string",
-        required: false,
-        input: false,
-        fieldName: "app_name",
-        unique: false,
-      },
     },
   },
   socialProviders: {
@@ -99,12 +92,6 @@ export const auth = betterAuth({
               subject: `Welcome to ${APP_NAME}!`,
               react: WelcomeEmail({ name: user.name! || "there" }),
             });
-
-            await db
-              .update(userSchema)
-              .set({ appName: APP_NAME })
-              .where(eq(userSchema.id, user.id))
-              .execute();
           }
         },
       },

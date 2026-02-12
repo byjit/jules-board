@@ -1,6 +1,7 @@
 ## Project Overview
 
-A next js boilerplate app
+Platform is a Kanban board users can manage multiple development projects. So on the top right of the screen in the navbar there will be a create new button on clicking which a dialog should pop up where they can Add a project name, and upload a json file (schema in docs/prd-schema.json ) which represents a PRD with user stories. This project name and jSON data should be stored in the db. And the JSON data should be visible in the kanaban board. And the user should be able to click on a kanban card to see and update the user story details or delete the kanban card. The user should also be able to add new user stories to only the 'new' project. The user should also be able to delete a project item as well as the project if he likes.
+
 
 # Your Role
 

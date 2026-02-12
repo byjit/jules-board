@@ -12,7 +12,6 @@ export const user = pgTable("user", {
   emailVerified: boolean("email_verified").notNull(),
   image: text("image"),
   onboard: boolean("onboard").default(true),
-  appName: text("app_name"),
   metadata: text("metadata"),
   role: text("role").default("user"),
   banned: boolean("banned").default(false),
