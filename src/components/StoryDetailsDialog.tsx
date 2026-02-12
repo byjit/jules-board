@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { type ColumnType, type UserStory, useProjectStore } from "@/hooks/use-project-store";
+import { trpc } from "@/trpc/react";
 
 interface StoryDetailsDialogProps {
   story: UserStory | null;
@@ -37,6 +38,9 @@ export function StoryDetailsDialog({
 }: StoryDetailsDialogProps) {
   const updateStory = useProjectStore((state) => state.updateStory);
   const deleteStory = useProjectStore((state) => state.deleteStory);
+
+  const updateStoryMutation = trpc.userStory.update.useMutation();
+  const deleteStoryMutation = trpc.userStory.delete.useMutation();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -64,7 +68,7 @@ export function StoryDetailsDialog({
     }
   }, [story]);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!(story && projectId)) return;
 
     const projects = useProjectStore.getState().projects;
@@ -92,14 +96,24 @@ export function StoryDetailsDialog({
       passes: status === "done",
     });
 
+    await updateStoryMutation.mutateAsync({
+      id: story.id,
+      title,
+      description,
+      status,
+      priority,
+      passes: status === "done",
+    });
+
     toast.success("Story updated");
     onOpenChange(false);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!(story && projectId)) return;
     if (confirm("Are you sure you want to delete this story?")) {
       deleteStory(projectId, story.id);
+      await deleteStoryMutation.mutateAsync({ id: story.id });
       toast.success("Story deleted");
       onOpenChange(false);
     }

@@ -50,24 +50,9 @@ You are an experienced software engineer with expertise in various programming l
 - `pnpm run check` - Fix and Run ultracite diagnostics (errors only)
 - `pnpm run typecheck` - Run TypeScript type checking
 - `pnpm run db:local` - Start Turso DB in local development mode
-- `pnpm run db:generate` - Generate database schema with drizzle-kit
 - `pnpm run db:sync` - Generate schema and run migrations
 - `pnpm run db:sync:local` - Generate schema and run migrations against local DB
 
 
 ## NOTES
 - Radix UI is used to implement shadcn UI
-- YOU MUST USE BEADS ( bd ) FOR ISSUE TRACKING
-
-## Issue Tracking
-
-This project uses **bd (beads)** for issue tracking.
-Run `bd prime` for workflow context.
-
-**Quick reference:**
-- `bd ready` - Find unblocked work
-- `bd create "Title" --type task --priority 2` - Create issue
-- `bd close <id>` - Complete work
-- `bd sync` - Sync with git (run at session end)
-
-For full workflow details: `bd prime`

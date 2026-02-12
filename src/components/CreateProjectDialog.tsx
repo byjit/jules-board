@@ -12,8 +12,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { type Project, useProjectStore } from "@/hooks/use-project-store";
 import { parseGitHubUrl } from "@/lib/utils";
+import { trpc } from "@/trpc/react";
 
 interface CreateProjectDialogProps {
   open: boolean;
@@ -26,7 +26,10 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
   const [gitBranch, setGitBranch] = useState("main");
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const addProject = useProjectStore((state) => state.addProject);
+
+  const createProjectMutation = trpc.project.create.useMutation();
+  const createUserStoryMutation = trpc.userStory.create.useMutation();
+  const utils = trpc.useUtils();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files?.[0]) {
@@ -55,22 +58,27 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
         throw new Error("Invalid JSON format: userStories array is missing");
       }
 
-      const newProject: Project = {
-        id: crypto.randomUUID(),
+      const createdProject = await createProjectMutation.mutateAsync({
         name: projectName,
         branchName: gitBranch || jsonData.branchName,
-        description: jsonData.description,
+        description: jsonData.description || "",
         gitRepo: parseGitHubUrl(gitRepo),
         gitBranch: gitBranch,
-        userStories: (jsonData.userStories as any[]).map((story) => ({
-          ...story,
-          status: story.status || (story.passes ? "done" : "todo"),
-          passes: story.passes ?? story.status === "done",
-        })),
-        createdAt: Date.now(),
-      };
+      });
 
-      addProject(newProject);
+      // Create stories
+      const stories = (jsonData.userStories as any[]).map((story) => ({
+        ...story,
+        projectId: createdProject.id,
+        status: story.status || (story.passes ? "done" : "todo"),
+        passes: story.passes ?? story.status === "done",
+      }));
+
+      await Promise.all(stories.map((story) => createUserStoryMutation.mutateAsync(story)));
+
+      // Invalidate queries to refresh data
+      await utils.project.getAll.invalidate();
+
       toast.success("Project created successfully");
       onOpenChange(false);
       setProjectName("");
@@ -87,7 +95,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
 
   return (
     <Dialog onOpenChange={onOpenChange} open={open}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="min-w-xl">
         <DialogHeader>
           <DialogTitle>Create New Project</DialogTitle>
           <DialogDescription>
@@ -111,7 +119,7 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
                 id="gitRepo"
                 onBlur={(e) => setGitRepo(parseGitHubUrl(e.target.value))}
                 onChange={(e) => setGitRepo(e.target.value)}
-                placeholder="sources/github/owner/repo"
+                placeholder="github repo url"
                 value={gitRepo}
               />
             </div>

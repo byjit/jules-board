@@ -1,4 +1,3 @@
-import { getSession } from "@/../auth";
 import { ProjectBoard } from "@/components/ProjectBoard";
 
 export default async function DashboardPage() {

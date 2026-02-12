@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { type ColumnType, type UserStory, useProjectStore } from "@/hooks/use-project-store";
 import { parseGitHubUrl } from "@/lib/utils";
+import { trpc } from "@/trpc/react";
 import { StoryDetailsDialog } from "./StoryDetailsDialog";
 
 export function ProjectBoard() {
@@ -19,6 +20,11 @@ export function ProjectBoard() {
   } = useProjectStore();
   const [selectedStory, setSelectedStory] = useState<UserStory | null>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  const updateStoryMutation = trpc.userStory.update.useMutation();
+  const deleteStoryMutation = trpc.userStory.delete.useMutation();
+  const createStoryMutation = trpc.userStory.create.useMutation();
+  const updateProjectMutation = trpc.project.update.useMutation();
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
@@ -68,10 +74,18 @@ export function ProjectBoard() {
         });
         if (!res.ok) throw new Error("Failed to create Jules session");
         const data = await res.json();
+
         updateStory(projectId, story.id, {
           sessionId: data.name,
           sessionStatus: "CREATED",
         });
+
+        await updateStoryMutation.mutateAsync({
+          id: story.id,
+          sessionId: data.name,
+          sessionStatus: "CREATED",
+        });
+
         return data;
       })(),
       {
@@ -106,6 +120,12 @@ export function ProjectBoard() {
       passes: newStatus === "done",
     });
 
+    await updateStoryMutation.mutateAsync({
+      id: storyId,
+      status: newStatus,
+      passes: newStatus === "done",
+    });
+
     // Jules Integration: Create session when moved to 'doing'
     if (newStatus === "doing" && !story.sessionId) {
       await createJulesSession(story, selectedProject.id);
@@ -131,22 +151,25 @@ export function ProjectBoard() {
     }
 
     deleteStory(selectedProject.id, storyId);
+    await deleteStoryMutation.mutateAsync({ id: storyId });
     toast.success("Story deleted");
   };
 
-  const handleAddStory = (title: string) => {
-    const newStory: UserStory = {
-      id: `US-${(selectedProject.userStories.length + 1).toString().padStart(3, "0")}`,
+  const handleAddStory = async (title: string) => {
+    const newStoryData = {
+      projectId: selectedProject.id,
       title,
       description: "",
       acceptanceCriteria: [],
       priority: 2,
       passes: false,
-      status: "todo",
+      status: "todo" as const,
       notes: "",
       dependsOn: [],
     };
-    addStoryToProject(selectedProject.id, newStory);
+
+    const createdStory = await createStoryMutation.mutateAsync(newStoryData);
+    addStoryToProject(selectedProject.id, createdStory as any);
     toast.success("New story added to project");
   };
 
@@ -175,9 +198,14 @@ export function ProjectBoard() {
             <Input
               className="h-8 text-xs w-64 bg-background/50"
               id="gitRepo"
-              onBlur={(e) => {
+              onBlur={async (e) => {
+                const gitRepo = parseGitHubUrl(e.target.value);
                 updateProject(selectedProject.id, {
-                  gitRepo: parseGitHubUrl(e.target.value),
+                  gitRepo,
+                });
+                await updateProjectMutation.mutateAsync({
+                  id: selectedProject.id,
+                  gitRepo,
                 });
               }}
               onChange={(e) => {
@@ -199,6 +227,12 @@ export function ProjectBoard() {
             <Input
               className="h-8 text-xs w-24 bg-background/50"
               id="gitBranch"
+              onBlur={async (e) => {
+                await updateProjectMutation.mutateAsync({
+                  id: selectedProject.id,
+                  gitBranch: e.target.value,
+                });
+              }}
               onChange={(e) => {
                 updateProject(selectedProject.id, { gitBranch: e.target.value });
               }}

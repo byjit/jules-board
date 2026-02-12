@@ -13,29 +13,38 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useProjectStore } from "@/hooks/use-project-store";
+import { useSyncProjects } from "@/hooks/use-sync-projects";
+import { trpc } from "@/trpc/react";
 import { Logo } from "./block/Logo";
+import { ThemeSwitcher } from "./theme-switcher";
 
 export const TopBar = () => {
+  useSyncProjects();
   const [isOpen, setIsOpen] = useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const {
-    projects,
-    selectedProjectId,
-    setSelectedProjectId,
-    deleteProject,
-    julesApiKey,
-    updateStory,
-  } = useProjectStore();
+  const { projects, selectedProjectId, setSelectedProjectId, julesApiKey, updateStory } =
+    useProjectStore();
+
+  const deleteProjectMutation = trpc.project.delete.useMutation();
+  const updateStoryMutation = trpc.userStory.update.useMutation();
+  const utils = trpc.useUtils();
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
-  const handleDeleteProject = () => {
+  const handleDeleteProject = async () => {
     if (!selectedProjectId) return;
     if (confirm("Are you sure you want to delete this project and all its stories?")) {
-      deleteProject(selectedProjectId);
-      setSelectedProjectId(projects.length > 0 ? projects[0]!.id : null);
-      toast.success("Project deleted");
+      try {
+        await deleteProjectMutation.mutateAsync({ id: selectedProjectId });
+        await utils.project.getAll.invalidate();
+        setSelectedProjectId(
+          projects.length > 1 ? projects.find((p) => p.id !== selectedProjectId)?.id || null : null
+        );
+        toast.success("Project deleted");
+      } catch (_error) {
+        toast.error("Failed to delete project");
+      }
     }
   };
 
@@ -67,9 +76,13 @@ export const TopBar = () => {
             const data = await res.json();
 
             // Update story status based on session state
-            // For now, let's just update the internal sessionStatus field
-            // If we knew the status that means "done", we could move it to 'done'
             updateStory(selectedProject.id, story.id, {
+              sessionStatus: data.state || "UNKNOWN",
+            });
+
+            // Also update in DB
+            await updateStoryMutation.mutateAsync({
+              id: story.id,
               sessionStatus: data.state || "UNKNOWN",
             });
           } catch (error) {
@@ -129,6 +142,7 @@ export const TopBar = () => {
               <RefreshCcw className="h-4 w-4" />
             </Button>
           )}
+          <ThemeSwitcher />
           <Button
             onClick={() => setIsSettingsOpen(true)}
             size="icon"
