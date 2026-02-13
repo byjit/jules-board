@@ -66,6 +66,10 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
         gitBranch: gitBranch,
       });
 
+      if (!createdProject?.id) {
+        throw new Error("Failed to create project");
+      }
+
       // Create stories
       const stories = (jsonData.userStories as any[]).map((story) => ({
         ...story,

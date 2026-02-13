@@ -34,6 +34,9 @@
         },
         "useExhaustiveDependencies": "warn"
       },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off"
+      },
       "suspicious": "off",
       "style": "off",
       "performance": {

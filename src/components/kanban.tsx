@@ -344,7 +344,6 @@ const AddCard = ({ onAddStory }: AddCardProps) => {
       {adding ? (
         <motion.form layout onSubmit={handleSubmit}>
           <textarea
-            autoFocus
             className="w-full rounded-lg border border-primary bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[80px]"
             onChange={(e) => setText(e.target.value)}
             onKeyDown={(e) => {
