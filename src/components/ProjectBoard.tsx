@@ -13,6 +13,7 @@ export function ProjectBoard() {
   const {
     projects,
     selectedProjectId,
+    julesApiKey,
     updateStory,
     deleteStory,
     addStoryToProject,
@@ -25,8 +26,11 @@ export function ProjectBoard() {
   const deleteStoryMutation = trpc.userStory.delete.useMutation();
   const createStoryMutation = trpc.userStory.create.useMutation();
   const updateProjectMutation = trpc.project.update.useMutation();
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    trpc.user.getCurrentUser.useQuery();
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
+  const effectiveJulesApiKey = julesApiKey || currentUser?.julesApiKey || "";
 
   if (!selectedProject) {
     return (
@@ -40,11 +44,15 @@ export function ProjectBoard() {
   }
 
   const createJulesSession = async (story: UserStory, projectId: string) => {
-    const { julesApiKey } = useProjectStore.getState();
     const project = projects.find((p) => p.id === projectId);
 
-    if (!(project && julesApiKey && project.gitRepo && project.gitBranch)) {
-      if (!julesApiKey) {
+    if (isCurrentUserLoading) {
+      toast.info("Loading Jules settings...");
+      return;
+    }
+
+    if (!(project && effectiveJulesApiKey && project.gitRepo && project.gitBranch)) {
+      if (!effectiveJulesApiKey) {
         toast.info("Set Jules API Key in settings to enable automation.");
       } else if (!(project?.gitRepo && project?.gitBranch)) {
         toast.info("Set Git Repository and Branch in settings to enable automation.");
@@ -58,10 +66,10 @@ export function ProjectBoard() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "x-goog-api-key": julesApiKey,
+            "x-goog-api-key": effectiveJulesApiKey,
           },
           body: JSON.stringify({
-            prompt: `Here's a short description on the project:\n${project.description}\n\nFor the project Implement the following User story now: ${story.description}\n\nAcceptance Criteria:\n${story.acceptanceCriteria.map((ac) => `- ${ac}`).join("\n")}`,
+            prompt: `Here's a short description on the project:\n${project.description}\n\nFor the project Implement the following User story now: \nStory title: ${story.title}\nStory description: ${story.description}\n\nAcceptance Criteria:\n${story.acceptanceCriteria.map((ac) => `- ${ac}`).join("\n")}\n\nAdditional Notes:\n-You Do not need to use browser to test the animations. Just Open the page, take a screenshot and that's all you have to do to check the UI.\n${story.notes}`,
             sourceContext: {
               source: project.gitRepo,
               githubRepoContext: {
@@ -134,15 +142,18 @@ export function ProjectBoard() {
 
   const handleDeleteStory = async (storyId: string) => {
     const story = selectedProject.userStories.find((s) => s.id === storyId);
-    const { julesApiKey } = useProjectStore.getState();
 
-    if (story?.sessionId && julesApiKey) {
+    if (isCurrentUserLoading) {
+      toast.info("Loading Jules settings...");
+    }
+
+    if (story?.sessionId && effectiveJulesApiKey) {
       // Attempt to delete session if it exists
       try {
         await fetch(`https://jules.googleapis.com/v1alpha/${story.sessionId}`, {
           method: "DELETE",
           headers: {
-            "x-goog-api-key": julesApiKey,
+            "x-goog-api-key": effectiveJulesApiKey,
           },
         });
       } catch (error) {
@@ -234,7 +245,9 @@ export function ProjectBoard() {
                 });
               }}
               onChange={(e) => {
-                updateProject(selectedProject.id, { gitBranch: e.target.value });
+                updateProject(selectedProject.id, {
+                  gitBranch: e.target.value,
+                });
               }}
               placeholder="main"
               value={selectedProject.gitBranch || ""}

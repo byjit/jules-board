@@ -172,7 +172,13 @@ const Column = ({
     setActive(false);
   };
 
-  const filteredStories = stories.filter((s) => s.status === column);
+  const filteredStories = stories
+    .filter((s) => s.status === column)
+    .sort((a, b) => {
+      const priorityA = typeof a.priority === "number" && a.priority > 0 ? a.priority : 999;
+      const priorityB = typeof b.priority === "number" && b.priority > 0 ? b.priority : 999;
+      return priorityA - priorityB;
+    });
 
   return (
     <div className="w-72 shrink-0">

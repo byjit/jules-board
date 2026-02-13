@@ -11,6 +11,7 @@ export const user = sqliteTable("user", {
   email: text("email").notNull(),
   emailVerified: integer("email_verified", { mode: "boolean" }).notNull(),
   image: text("image"),
+  julesApiKey: text("jules_api_key"),
   onboard: integer("onboard", { mode: "boolean" }).default(true),
   metadata: text("metadata"),
   role: text("role").default("user"),

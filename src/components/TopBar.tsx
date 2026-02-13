@@ -28,9 +28,12 @@ export const TopBar = () => {
 
   const deleteProjectMutation = trpc.project.delete.useMutation();
   const updateStoryMutation = trpc.userStory.update.useMutation();
+  const { data: currentUser, isLoading: isCurrentUserLoading } =
+    trpc.user.getCurrentUser.useQuery();
   const utils = trpc.useUtils();
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
+  const effectiveJulesApiKey = julesApiKey || currentUser?.julesApiKey || "";
 
   const handleDeleteProject = async () => {
     if (!selectedProjectId) return;
@@ -49,7 +52,12 @@ export const TopBar = () => {
   };
 
   const handleRefresh = async () => {
-    if (!julesApiKey) {
+    if (isCurrentUserLoading) {
+      toast.info("Loading Jules settings...");
+      return;
+    }
+
+    if (!effectiveJulesApiKey) {
       toast.error("Please set your Jules API Key in settings first.");
       return;
     }
@@ -69,21 +77,35 @@ export const TopBar = () => {
           try {
             const res = await fetch(`https://jules.googleapis.com/v1alpha/${story.sessionId}`, {
               headers: {
-                "x-goog-api-key": julesApiKey,
+                "x-goog-api-key": effectiveJulesApiKey,
               },
             });
             if (!res.ok) throw new Error("Failed to fetch session");
             const data = await res.json();
+            const sessionState = data.state || "UNKNOWN";
+            const isCompleted = sessionState === "COMPLETED";
 
             // Update story status based on session state
             updateStory(selectedProject.id, story.id, {
-              sessionStatus: data.state || "UNKNOWN",
+              sessionStatus: sessionState,
+              ...(isCompleted
+                ? {
+                    status: "done",
+                    passes: true,
+                  }
+                : {}),
             });
 
             // Also update in DB
             await updateStoryMutation.mutateAsync({
               id: story.id,
-              sessionStatus: data.state || "UNKNOWN",
+              sessionStatus: sessionState,
+              ...(isCompleted
+                ? {
+                    status: "done",
+                    passes: true,
+                  }
+                : {}),
             });
           } catch (error) {
             console.error(`Error refreshing story ${story.id}:`, error);

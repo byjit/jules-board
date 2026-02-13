@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useProjectStore } from "@/hooks/use-project-store";
 import { parseGitHubUrl } from "@/lib/utils";
+import { trpc } from "@/trpc/react";
 
 interface SettingsDialogProps {
   open: boolean;
@@ -23,6 +24,7 @@ interface SettingsDialogProps {
 export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
   const { julesApiKey, setJulesApiKey, selectedProjectId, projects, updateProject } =
     useProjectStore();
+  const updateJulesApiKeyMutation = trpc.user.updateJulesApiKey.useMutation();
 
   const selectedProject = projects.find((p) => p.id === selectedProjectId);
 
@@ -38,16 +40,23 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
     }
   }, [open, julesApiKey, selectedProject]);
 
-  const handleSave = () => {
-    setJulesApiKey(apiKey);
-    if (selectedProjectId) {
-      updateProject(selectedProjectId, {
-        gitRepo: parseGitHubUrl(gitRepo),
-        gitBranch,
-      });
+  const handleSave = async () => {
+    try {
+      await updateJulesApiKeyMutation.mutateAsync({ julesApiKey: apiKey.trim() });
+      setJulesApiKey(apiKey.trim());
+
+      if (selectedProjectId) {
+        updateProject(selectedProjectId, {
+          gitRepo: parseGitHubUrl(gitRepo),
+          gitBranch,
+        });
+      }
+
+      toast.success("Settings saved");
+      onOpenChange(false);
+    } catch (_error) {
+      toast.error("Failed to save settings");
     }
-    toast.success("Settings saved");
-    onOpenChange(false);
   };
 
   return (
@@ -105,7 +114,9 @@ export function SettingsDialog({ open, onOpenChange }: SettingsDialogProps) {
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button disabled={updateJulesApiKeyMutation.isPending} onClick={handleSave}>
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

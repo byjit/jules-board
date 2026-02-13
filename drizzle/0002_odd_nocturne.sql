@@ -1,0 +1,1 @@
+ALTER TABLE `user` ADD `jules_api_key` text;
