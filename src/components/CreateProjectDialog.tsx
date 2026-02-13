@@ -1,4 +1,5 @@
 "use client";
+import { createId } from "@paralleldrive/cuid2";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -70,13 +71,27 @@ export function CreateProjectDialog({ open, onOpenChange }: CreateProjectDialogP
         throw new Error("Failed to create project");
       }
 
+      // Map original IDs to new unique IDs (cuids)
+      const idMap = new Map<string, string>();
+      for (const story of jsonData.userStories) {
+        idMap.set(story.id, createId());
+      }
+
       // Create stories
-      const stories = (jsonData.userStories as any[]).map((story) => ({
-        ...story,
-        projectId: createdProject.id,
-        status: story.status || (story.passes ? "done" : "todo"),
-        passes: story.passes ?? story.status === "done",
-      }));
+      const stories = (jsonData.userStories as any[]).map((story) => {
+        const { id: originalId, ...rest } = story;
+        const newId = idMap.get(originalId);
+
+        return {
+          ...rest,
+          id: newId,
+          slug: originalId,
+          projectId: createdProject.id,
+          status: story.status || (story.passes ? "done" : "todo"),
+          passes: story.passes ?? story.status === "done",
+          dependsOn: (story.dependsOn || []).map((depId: string) => idMap.get(depId) || depId),
+        };
+      });
 
       await Promise.all(stories.map((story) => createUserStoryMutation.mutateAsync(story)));
 

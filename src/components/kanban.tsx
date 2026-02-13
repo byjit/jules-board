@@ -11,7 +11,7 @@ interface KanbanProps {
   stories: UserStory[];
   onMoveStory: (storyId: string, newStatus: ColumnType) => void;
   onDeleteStory: (storyId: string) => void;
-  onAddStory: (title: string) => void;
+  onAddStory: () => void;
   onStoryClick: (story: UserStory) => void;
   canAddStory: boolean;
 }
@@ -94,7 +94,7 @@ type ColumnProps = {
   column: ColumnType;
   onMoveStory: (storyId: string, newStatus: ColumnType) => void;
   onStoryClick: (story: UserStory) => void;
-  onAddStory: (title: string) => void;
+  onAddStory: () => void;
   canAddStory: boolean;
 };
 
@@ -202,6 +202,7 @@ const Column = ({
         {filteredStories.map((s) => {
           return (
             <Card
+              allStories={stories}
               handleDragStart={handleDragStart}
               key={s.id}
               onClick={() => onStoryClick(s)}
@@ -220,9 +221,10 @@ type CardProps = {
   story: UserStory;
   handleDragStart: (e: DragEvent, storyId: string) => void;
   onClick: () => void;
+  allStories: UserStory[];
 };
 
-const Card = ({ story, handleDragStart, onClick }: CardProps) => {
+const Card = ({ story, handleDragStart, onClick, allStories }: CardProps) => {
   return (
     <>
       <DropIndicator beforeId={story.id} column={story.status} />
@@ -237,7 +239,7 @@ const Card = ({ story, handleDragStart, onClick }: CardProps) => {
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight bg-muted px-1.5 py-0.5 rounded">
-              {story.id}
+              {story.slug || story.id}
             </span>
             {story.priority && (
               <span
@@ -262,14 +264,17 @@ const Card = ({ story, handleDragStart, onClick }: CardProps) => {
             <div className="mt-2 flex items-center gap-1.5 pt-2 border-t border-border/50">
               <FiLock className="h-3 w-3 text-muted-foreground/70" />
               <div className="flex flex-wrap gap-1">
-                {story.dependsOn.map((depId) => (
-                  <span
-                    className="text-[9px] font-semibold text-muted-foreground/70 bg-muted px-1 rounded"
-                    key={depId}
-                  >
-                    {depId}
-                  </span>
-                ))}
+                {story.dependsOn.map((depId) => {
+                  const depStory = allStories.find((s) => s.id === depId);
+                  return (
+                    <span
+                      className="text-[9px] font-semibold text-muted-foreground/70 bg-muted px-1 rounded"
+                      key={depId}
+                    >
+                      {depStory?.slug || depId}
+                    </span>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -330,61 +335,20 @@ const BurnBarrel = ({ onDeleteStory }: { onDeleteStory: (storyId: string) => voi
 };
 
 type AddCardProps = {
-  onAddStory: (title: string) => void;
+  onAddStory: () => void;
 };
 
 const AddCard = ({ onAddStory }: AddCardProps) => {
-  const [text, setText] = useState("");
-  const [adding, setAdding] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!text.trim().length) return;
-    onAddStory(text.trim());
-    setText("");
-    setAdding(false);
-  };
-
   return (
     <div className="p-2">
-      {adding ? (
-        <motion.form layout onSubmit={handleSubmit}>
-          <textarea
-            className="w-full rounded-lg border border-primary bg-background p-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[80px]"
-            onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                handleSubmit(e);
-              }
-            }}
-            placeholder="What needs to be done?"
-          />
-          <div className="mt-2 flex items-center justify-end gap-2">
-            <button
-              className="px-3 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
-              onClick={() => setAdding(false)}
-              type="button"
-            >
-              Cancel
-            </button>
-            <button
-              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-              type="submit"
-            >
-              Add Story
-            </button>
-          </div>
-        </motion.form>
-      ) : (
-        <motion.button
-          className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-muted-foreground/30 py-3 text-xs font-medium text-muted-foreground hover:border-primary/50 hover:text-primary transition-all bg-background/50"
-          layout
-          onClick={() => setAdding(true)}
-        >
-          <FiPlus className="h-4 w-4" />
-          <span>Add Story</span>
-        </motion.button>
-      )}
+      <motion.button
+        className="flex w-full items-center justify-center gap-2 rounded-lg border border-dashed border-muted-foreground/30 py-3 text-xs font-medium text-muted-foreground hover:border-primary/50 hover:text-primary transition-all bg-background/50"
+        layout
+        onClick={onAddStory}
+      >
+        <FiPlus className="h-4 w-4" />
+        <span>Add Story</span>
+      </motion.button>
     </div>
   );
 };

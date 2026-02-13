@@ -12,6 +12,7 @@ export const userStory = sqliteTable("user_story", {
   projectId: text("project_id")
     .notNull()
     .references(() => project.id, { onDelete: "cascade" }),
+  slug: text("slug"),
   title: text("title").notNull(),
   description: text("description").notNull(),
   acceptanceCriteria: text("acceptance_criteria", { mode: "json" })

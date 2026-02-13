@@ -4,6 +4,7 @@ export type ColumnType = "todo" | "doing" | "done";
 
 export interface UserStory {
   id: string;
+  slug?: string | null;
   title: string;
   description: string;
   acceptanceCriteria: string[];
@@ -12,8 +13,8 @@ export interface UserStory {
   status: ColumnType;
   notes: string;
   dependsOn: string[];
-  sessionId?: string;
-  sessionStatus?: string;
+  sessionId?: string | null;
+  sessionStatus?: string | null;
 }
 
 export interface Project {

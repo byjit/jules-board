@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "0670d1a2-43fb-460b-a409-3a5e3c9937c5",
-  "prevId": "4aa2400e-a1ae-4b50-b8d3-fd6664b0d9cf",
+  "id": "f3e04c12-2411-40e9-b557-d1245e6559ae",
+  "prevId": "0670d1a2-43fb-460b-a409-3a5e3c9937c5",
   "tables": {
     "account": {
       "name": "account",
@@ -325,6 +325,13 @@
           "notNull": false,
           "autoincrement": false
         },
+        "jules_api_key": {
+          "name": "jules_api_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
         "onboard": {
           "name": "onboard",
           "type": "integer",
@@ -335,13 +342,6 @@
         },
         "metadata": {
           "name": "metadata",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": false,
-          "autoincrement": false
-        },
-        "jules_api_key": {
-          "name": "jules_api_key",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -413,6 +413,13 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
           "autoincrement": false
         },
         "title": {
